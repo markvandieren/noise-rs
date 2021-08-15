@@ -23,7 +23,7 @@ pub struct Worley {
     perm_table: PermutationTable,
 }
 
-type DistanceFunction = dyn Fn(&[f64], &[f64]) -> f64;
+type DistanceFunction = dyn Fn(&[f64], &[f64]) -> f64 + Send + Sync;
 
 impl Worley {
     pub const DEFAULT_SEED: u32 = 0;
@@ -42,7 +42,7 @@ impl Worley {
     /// Sets the distance function used by the Worley cells.
     pub fn set_distance_function<F>(self, function: F) -> Self
     where
-        F: Fn(&[f64], &[f64]) -> f64 + 'static,
+        F: Fn(&[f64], &[f64]) -> f64 + 'static + Send + Sync,
     {
         Self {
             distance_function: Box::new(function),
